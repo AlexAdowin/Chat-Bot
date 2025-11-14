@@ -1,0 +1,18 @@
+# ChatBot Local v2.0 - Dépendances Python
+# Nécessite Python >= 3.9
+
+# Interface Graphique Moderne
+ttkbootstrap>=1.6.11
+
+# Tous les autres modules utilisés proviennent de la bibliothèque standard :
+# - tkinter
+# - json
+# - threading
+# - re
+# - string
+# - datetime
+# - typing
+# - os
+# - random
+# - unittest
+# - argparse

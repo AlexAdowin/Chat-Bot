@@ -1,0 +1,59 @@
+import unittest
+import sys
+import os
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from src.chatbot import Chatbot
+
+
+class TestChatbot(unittest.TestCase):
+    """Tests pour la classe Chatbot"""
+    
+    def setUp(self):
+        """Initialise les tests"""
+        self.chatbot = Chatbot()
+    
+    def test_initialisation(self):
+        """Test que le chatbot est bien initialisé"""
+        self.assertIsNotNone(self.chatbot.detector)
+        self.assertIsNotNone(self.chatbot.base_connaissance)
+        self.assertIsNotNone(self.chatbot.memoire)
+    
+    def test_traiter_entree_simple(self):
+        """Test le traitement d'une entrée simple"""
+        reponse, intention = self.chatbot.traiter_entree("Bonjour")
+        self.assertIsNotNone(reponse)
+        self.assertIsNotNone(intention)
+        self.assertIsInstance(reponse, str)
+    
+    def test_traiter_entree_salutation(self):
+        """Test le traitement d'une salutation"""
+        reponse, intention = self.chatbot.traiter_entree("Salut")
+        self.assertEqual(intention, 'salutation')
+        self.assertGreater(len(reponse), 0)
+    
+    def test_traiter_entree_calcul(self):
+        """Test le traitement d'un calcul"""
+        reponse, intention = self.chatbot.traiter_entree("5 + 3")
+        self.assertEqual(intention, 'calcul')
+        self.assertIn("8", reponse)
+    
+    def test_historique_sauvegarde(self):
+        """Test que l'historique est sauvegardé"""
+        initial_count = len(self.chatbot.memoire.historique)
+        self.chatbot.traiter_entree("Bonjour")
+        final_count = len(self.chatbot.memoire.historique)
+        self.assertGreaterEqual(final_count - initial_count, 2)
+    
+    def test_debug_mode(self):
+        """Test le mode debug"""
+        debug_info = self.chatbot.obtenir_reponse_avec_debug("Bonjour")
+        self.assertIn('texte_utilisateur', debug_info)
+        self.assertIn('intention', debug_info)
+        self.assertIn('confiance', debug_info)
+        self.assertIn('reponse', debug_info)
+
+
+if __name__ == '__main__':
+    unittest.main()

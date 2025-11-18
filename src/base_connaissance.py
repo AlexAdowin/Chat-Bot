@@ -1,12 +1,13 @@
 import random # pour pour des choix difeerents a chaque entrer 
 
-from typing import Any, Dict , List # pour donner le type des variables
+from typing import Dict , List # pour donner le type des variables
 
 from datetime import datetime # pour avoir la date et l'heure
 
 import re # pour les expressions reguliere 
 
-import math # pour les operations mathematiques avancées
+import math # pour les fonctions mathematiques avancées
+
 
 
 
@@ -18,7 +19,7 @@ class BaseConnaissance:
         
         self.reponses = {} # creer un dictionnaire vide pour stocker les reponses
         
-        self._initialiser_reponses(self) #rmplir le dico avec les reponses predefinies
+        self._initialiser_reponses() #rmplir le dico avec les reponses predefinies
         
     def _initialiser_reponses(self):  # charger les reponses predefinies dans le dico
         
@@ -67,6 +68,17 @@ class BaseConnaissance:
             "Behold my supremacy, human"
             
             
+            ]
+        
+        self.reponses['cv'] = [ 
+                                                 
+             "oui oui et toi ? " ,
+             
+             "Bien et toi ?"   ,
+             
+             "Tout roule"                                 
+                                                 
+                                                 
             ]
         
         # presentation 
@@ -145,7 +157,7 @@ class BaseConnaissance:
             
             "Pourquoi les mathématiciens détestent-ils la forêt ? Parce qu'il y a trop de racines carrées !",
             
-            "Pourquoi les maths sont tristes ? Parce qu'elles ont trop de problèmes !"
+            "Pourquoi les maths sont tristes ? Parce qu'elles ont trop de problèmes !",
             
             "Pourquoi les mathématiques sont tristes ? Parce qu'elles ont trop de problèmes !",
             
@@ -291,168 +303,166 @@ class BaseConnaissance:
             
          ]
         
-    def obtenir_reponse (self , intention : str , entites:Dict = None) -> str : 
+    def obtenir_reponse(self, intention: str, entites: Dict = None) -> str: 
         
         # obtenir une reponse en fonction de l'intention detectee
         
-        if intention not in self.reponses : 
+        if intention not in self.reponses: 
             intention = 'autres' # si l'intention n'est pas reconnue , utiliser la reponse par defaut
             
-        reponse_possible = self.random.choice (self.reponses[intention]) # choisir une reponse aleatoire parmi les reponses possibles
+        reponse_possible = random.choice(self.reponses[intention]) # choisir une reponse aleatoire parmi les reponses possibles
         
         
-        if callable (reponse_possible) : 
-            return reponse_possible () # si la reponse est une fonction , l'appeler pour obtenir la reponse , dans le cas des lambda
+        if callable(reponse_possible): 
+            return reponse_possible() # si la reponse est une fonction , l'appeler pour obtenir la reponse , dans le cas des lambda
             
         return reponse_possible # sinon , retourner la reponse directement
-    import re
-import math
 
-def traiter_calcul(self, texte: str) -> str:
-    """Traite les calculs mathématiques simples avec sécurité"""
-    
-    texte_clean = texte.lower().strip()
-    
-    '''.lower() → met tout en minuscules
-       .strip() → enlève les espaces inutiles au début/à la fin'''
-    
-    # Dictionnaire de remplacement 
-    remplacements = {
-        'plus': '+',
-        'moins': '-',
-        'fois': '*',
-        'multiplier': '*',
-        'multiplié': '*',
-        'divise': '/',
-        'diviser': '/',
-        'divisé': '/',
-        'par': '/',
-        'au carré': '**2',
-        'carré': '**2',
-        'au cube': '**3',
-        'cube': '**3',
-        'puissance': '**',
-        'modulo': '%',
-        'reste': '%',
-        'racine': 'math.sqrt',
-        'pi': 'math.pi',
-        'π': 'math.pi',
-        'e': 'math.e',
-        '(': '(',
-        ')': ')'
-    }
-    
-    # Ajout des conversions de mots pour les nombres
-    nombres_mots = {
-        'un': '1', 'deux': '2', 'trois': '3', 'quatre': '4', 'cinq': '5',
-        'six': '6', 'sept': '7', 'huit': '8', 'neuf': '9', 'dix': '10',
-        'onze': '11', 'douze': '12', 'treize': '13', 'quatorze': '14', 'quinze': '15',
-        'seize': '16', 'vingt': '20', 'trente': '30', 'quarante': '40', 'cinquante': '50',
-        'soixante': '60', 'cent': '100', 'mille': '1000', 'million': '1000000'
-    }
-    
-    # Remplacer les mots par leurs équivalents numériques
-    for mot, nombre in nombres_mots.items():
+    def traiter_calcul(self, texte: str) -> str:
+        """Traite les calculs mathématiques simples avec sécurité"""
         
-        texte_clean = re.sub(rf'\b{mot}\b', nombre,  texte_clean)  # re.sub remplace le mot exact (\b = limite de mot)
-    
-    # Remplacer les opérateurs
-    for mot, operateur in remplacements.items():
-        texte_clean = texte_clean.replace(mot, operateur)
-    
-    # Gestion des pourcentages
-    texte_clean = re.sub(r'(\d+)%', r'(\1/100)', texte_clean)
-    
-    # Nettoyer l'expression
-    expression = re.sub(r'[^\d+\-*/%() .]', '', texte_clean).strip()
-    
-    # Vérifier la sécurité de l'expression
-    if not self.expression_est_securitaire(expression):
-        return "Désolé, ce calcul semble trop complexe ou dangereux."
-    
-    try:
-        # Évaluer l'expression de manière sécurisée
-        if expression and all(c in '0123456789+-*/().% ' for c in expression):
-            # Créer un environnement sécurisé pour eval
-            environnement_securise = {
-                '__builtins__': {},
-                'math': math,
-                'sqrt': math.sqrt,
-                'pi': math.pi,
-                'e': math.e,
-                'sin': math.sin,
-                'cos': math.cos,
-                'tan': math.tan,
-                'log': math.log,
-                'log10': math.log10,
-                'exp': math.exp
-            }
+        texte_clean = texte.lower().strip()
+        
+        '''.lower() → met tout en minuscules
+        .strip() → enlève les espaces inutiles au début/à la fin'''
+        
+        # Dictionnaire de remplacement 
+        remplacements = {
+            'plus': '+',
+            'moins': '-',
+            'fois': '*',
+            'multiplier': '*',
+            'multiplié': '*',
+            'divise': '/',
+            'diviser': '/',
+            'divisé': '/',
+            'par': '/',
+            'au carré': '**2',
+            'carré': '**2',
+            'au cube': '**3',
+            'cube': '**3',
+            'puissance': '**',
+            'modulo': '%',
+            'reste': '%',
+            'racine': 'math.sqrt',
+            'pi': 'math.pi',
+            'π': 'math.pi',
+            'e': 'math.e',
+            '(': '(',
+            ')': ')'
+        }
+        
+        # Ajout des conversions de mots pour les nombres
+        nombres_mots = {
+            'un': '1', 'deux': '2', 'trois': '3', 'quatre': '4', 'cinq': '5',
+            'six': '6', 'sept': '7', 'huit': '8', 'neuf': '9', 'dix': '10',
+            'onze': '11', 'douze': '12', 'treize': '13', 'quatorze': '14', 'quinze': '15',
+            'seize': '16', 'vingt': '20', 'trente': '30', 'quarante': '40', 'cinquante': '50',
+            'soixante': '60', 'cent': '100', 'mille': '1000', 'million': '1000000'
+        }
+        
+        # Remplacer les mots par leurs équivalents numériques
+        for mot, nombre in nombres_mots.items():
             
-            resultat = eval(expression, environnement_securise)
-            
-            # Formater le résultat
-            if isinstance(resultat, (int, float)):
-                if resultat == int(resultat):
-                    return f"🧮 Résultat : {int(resultat)}"
-                else:
-                    return f"🧮 Résultat : {round(resultat, 6)}"
-            else:
-                return f"🧮 Résultat : {resultat}"
+            texte_clean = re.sub(rf'\b{mot}\b', nombre,  texte_clean)  # re.sub remplace le mot exact (\b = limite de mot)
+        
+        # Remplacer les opérateurs
+        for mot, operateur in remplacements.items():
+            texte_clean = texte_clean.replace(mot, operateur)
+        
+        # Gestion des pourcentages
+        texte_clean = re.sub(r'(\d+)%', r'(\1/100)', texte_clean)
+        
+        # Nettoyer l'expression
+        expression = re.sub(r'[^\d+\-*/%() .]', '', texte_clean).strip()
+        
+        # Vérifier la sécurité de l'expression
+        if not self.expression_est_securitaire(expression):
+            return "Désolé, ce calcul semble trop complexe ou dangereux."
+        
+        try:
+            # Évaluer l'expression de manière sécurisée
+            if expression and all(c in '0123456789+-*/().% ' for c in expression):
+                # Créer un environnement sécurisé pour eval
+                environnement_securise = {
+                    '__builtins__': {},
+                    'math': math,
+                    'sqrt': math.sqrt,
+                    'pi': math.pi,
+                    'e': math.e,
+                    'sin': math.sin,
+                    'cos': math.cos,
+                    'tan': math.tan,
+                    'log': math.log,
+                    'log10': math.log10,
+                    'exp': math.exp
+                }
                 
-        else:
-            return "Je n'ai pas pu identifier le calcul. Peux-tu reformuler ?"
+                resultat = eval(expression, environnement_securise)
+                
+                # Formater le résultat
+                if isinstance(resultat, (int, float)):
+                    if resultat == int(resultat):
+                        return f"🧮 Résultat : {int(resultat)}"
+                    else:
+                        return f"🧮 Résultat : {round(resultat, 6)}"
+                else:
+                    return f"🧮 Résultat : {resultat}"
+                    
+            else:
+                return "Je n'ai pas pu identifier le calcul. Peux-tu reformuler ?"
+                
+        except ZeroDivisionError:
             
-    except ZeroDivisionError:
-        
-        return "❌ Impossible de diviser par zéro !"
-    except OverflowError:
-        
-        return "❌ Le résultat est trop grand !"
-    except ValueError as e:
-        
-        return f"❌ Erreur dans le calcul : {str(e)}"
-    except SyntaxError:
-        
-        return "❌ Expression mathématique invalide."
-    except Exception as e:
-        
-        return f"❌ Je n'arrive pas à faire ce calcul. Essaie quelque chose de plus simple !"
+            return "❌ Impossible de diviser par zéro !"
+        except OverflowError:
+            
+            return "❌ Le résultat est trop grand !"
+        except ValueError as e:
+            
+            return f"❌ Erreur dans le calcul : {str(e)}"
+        except SyntaxError:
+            
+            return "❌ Expression mathématique invalide."
+        except Exception as e:
+            
+            return f"❌ Je n'arrive pas à faire ce calcul. Essaie quelque chose de plus simple !"
 
-def expression_est_securitaire(self, expression: str) -> bool:
-    """Vérifie si l'expression mathématique est sécuritaire"""
-    
-    # Liste blanche des caractères autorisés
-    caracteres_autorises = set('0123456789+-*/().% ')
-    
-    # Vérifier que tous les caractères sont autorisés
-    if not all(c in caracteres_autorises for c in expression):
-        return False
-    
-    # Vérifier la longueur raisonnable
-    if len(expression) > 100:
-        return False
-    
-    # Vérifier l'équilibre des parenthèses
-    pile_parentheses = []
-    for char in expression:
-        if char == '(':
-            pile_parentheses.append(char)
-        elif char == ')':
-            if not pile_parentheses:
-                return False
-            pile_parentheses.pop()
-    
-    if pile_parentheses:
-        return False
-    
-    # Empêcher les expressions trop complexes ou dangereuses
-    motifs_dangereux = [
-        'import', 'exec', 'eval', 'open', 'file', 'os.', 'sys.', '__',
-        'lambda', 'class', 'def', 'raise', 'except', 'try'
-    ]
-    
-    for motif in motifs_dangereux:
-        if motif in expression.lower():
+    def expression_est_securitaire(self, expression: str) -> bool:
+        """Vérifie si l'expression mathématique est sécuritaire"""
+        
+        # Liste blanche des caractères autorisés
+        caracteres_autorises = set('0123456789+-*/().% ')
+        
+        # Vérifier que tous les caractères sont autorisés
+        if not all(c in caracteres_autorises for c in expression):
             return False
-    
-    return True
+        
+        # Vérifier la longueur raisonnable
+        if len(expression) > 100:
+            return False
+        
+        # Vérifier l'équilibre des parenthèses
+        pile_parentheses = []
+        for char in expression:
+            if char == '(':
+                pile_parentheses.append(char)
+            elif char == ')':
+                if not pile_parentheses:
+                    return False
+                pile_parentheses.pop()
+        
+        if pile_parentheses:
+            return False
+        
+        # Empêcher les expressions trop complexes ou dangereuses
+        motifs_dangereux = [
+            'import', 'exec', 'eval', 'open', 'file', 'os.', 'sys.', '__',
+            'lambda', 'class', 'def', 'raise', 'except', 'try'
+        ]
+        
+        for motif in motifs_dangereux:
+            if motif in expression.lower():
+                return False
+        
+        return True
